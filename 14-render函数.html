@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app">
+        <my-header v-bind:level="1">
+            我是通过render函数创建的组件1
+        </my-header>
+    </div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    Vue.component('my-header', {
+        //render:渲染 ，函数参数是一个回调函数，这个回调函数第一个参数是标签名，第二个是标签里的内容，第三个是[]
+        render: function (createElement) {
+            return createElement(
+                'h' + this.level,   // tag name 标签名称
+                this.$slots.default // 子组件中的阵列,父级填充的html代码等都临时保存在$slots.default
+            )
+        },
+        props: {
+            level: {
+                type: Number,
+                required: true
+            }
+        }
+    })
+    new Vue({
+        el:'#app'
+    });
+</script>
+</html>

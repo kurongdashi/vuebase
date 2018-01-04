@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>过滤器</title>
+</head>
+<body>
+<div id="app">
+    <!--1、过滤器也就是在html 模板引擎中使用函数-->
+    <p>{{myname}}</p>
+    <!--2、过滤器的使用 | 分割-->
+    <p>{{myname|format}}</p>
+    <!--3、过滤器串联使用-->
+    <p>{{ new Date()|getTime|format}}</p>
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    //1、定义全局的过滤器,value就是|左边传过来的值
+    Vue.filter('format',function (value) {
+        return '欢迎您'+value+'VIP会员';
+    });
+    let app=new Vue({
+        el:'#app',
+        data:{
+            myname:'张三'
+        },
+        //vue内部，局部注册,局部注册时属性都是复数带s
+        filters:{
+            getTime:function (value) {
+                return value.getTime();
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算属性和观察者</title>
+</head>
+<body>
+<div id="app">
+    <h3>计算者和观察者</h3>
+    <!--
+        (1)当使用模板内的js代码和表达式笔记复杂时，可以使用计算属性computed:{}
+
+        (2)计算属性里面可以定义多个计算函数返回计算结果,使用时，直接使用计算属性内的属性就可以了，
+           因为计算属性时框架提供的，就像data、methods、computed、
+        (3)计算属性默认提供的是get，get省略，我们还可以提供set属性，设置值
+    -->
+    <p>{{baidu.split('.')}}</p>
+    <!--直接使用计算属性内的属性-->
+    <p>{{reversed}}</p>
+    <p>{{now}}</p>
+    <!--监听属性watch:{}-->
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            flag:true,
+            baidu:'http://www.baidu.com',
+
+        },
+        //计算对象
+        computed:{
+            reversed:function () {
+                return this.baidu.split('.');
+            },
+            now:function () {
+              return new Date().getTime();
+            },
+            name:{
+                get:function (name) {
+                    return name+'123';
+                },
+                set:function (name) {
+                    this.name+='123';
+                }
+
+            }
+        },
+        //监听者，是针对data{}里的属性实现监听方法
+        watch:{
+            baidu:function (old,now) {
+                console.log('监听了flag的变化');
+            }
+        }
+    });
+    app.$watch('baidu',function (old,now) {
+        console.log('监听了flag的变化');
+    })
+</script>
+</html>

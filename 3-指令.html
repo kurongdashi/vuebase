@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>指令</title>
+</head>
+<body>
+<div id="app">
+    <h3>指令</h3>
+    <p v-if="flag">根据flag来判断是否需要删除p标签</p>
+    <!--指令可以传递参数 v-bind:参数,该指令注意用于绑定标签的各种属性，来改变其属性  -->
+    <p ><a v-bind:href="baidu">点击去百度</a></p>
+    <!--绑定事件的指令 v-on:click 、v-on:submit 等等-->
+    <p> <button v-on:click="tan()">点击弹窗</button></p>
+
+    <p ><a :href="baidu">使用缩写点击去百度</a></p>
+    <p> <button @:click="tan()">使用缩写点击弹窗</button></p>
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            flag:'true',
+            baidu:'http://www.baidu.com'
+        }
+    });
+</script>
+
+</html>

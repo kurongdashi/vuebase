@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义指令</title>
+</head>
+<body>
+<div id="app">
+    <h3>{{title}}</h3>
+    <!--
+        1、全局注册指令
+        2、局部注册指令
+
+    -->
+    <p><input type="text" v-focus></p>
+
+
+
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    <!--定义一个全局指令-->
+    Vue.directive('focus', {
+        //指令执行时的钩子函数
+        inserted:function (el) {
+            el.foucs();
+            
+        }
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title:'自定义指令',
+        },
+    });
+
+
+
+</script>
+</html>

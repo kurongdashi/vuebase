@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件处理</title>
+</head>
+<body>
+<div id="app">
+    <h3>{{title}}</h3>
+    <!--
+
+        v-on:指令 缩写为 @:事件
+
+        (1)大部分修饰符只能在原生DOM上使用
+        （2）.once可以在组件上使用
+        （3）修饰符还可以连接
+
+        2、事件修饰符，当触发事件时，有时需要做其他操作就使用到了事件修饰符
+        .stop :表示阻止默认冒泡
+        .prevent :阻止页面重载，在onsubmit 时
+        .self(自身触发)
+        3、按键修饰符，表示是那个键按下才会触发
+        （1）按键修饰符有系统键：
+        （2）普通键
+        （3）鼠标键
+
+
+    -->
+    <div>
+        <p><a href=""v-on:click="show()">show</a></p>
+    </div>
+    <!-- 此处会冒泡 -->
+    <div v-on:click="fu()">
+        <p ><a href=""v-on:click.stop="show()">show</a></p>
+    </div>
+    <!-- 此处会冒泡 -->
+    <div v-on:click.self="fu()">
+        <p ><a href=""v-on:click="show()">show</a></p>
+    </div>
+
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title:'事件处理',
+        },
+        methods:{
+            show:function () {
+
+                alert('show');
+            },
+            fu:function () {
+                alert('fu');
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>状态过渡</title>
+</head>
+<body>
+<div id="app">
+    <!--1、补间动画，状态或者值得改变，通过tweenjs -->
+    <div >
+        <!--input 标签step属性，可以变成计数器-->
+        <input v-model.number="number" type="number" step="20">
+        <p>{{ animatedNumber }}</p>
+    </div>
+    <!--2、颜色值改变，需要colorjs来辅助，tweenjs 实现-->
+    <!--<div >-->
+        <!--&lt;!&ndash;input 标签step属性，可以变成计数器&ndash;&gt;-->
+        <!--<input v-model.number="number" type="number">-->
+        <!--<p>{{ animatedNumber }}</p>-->
+    <!--</div>-->
+    <!--3、将动画封装到组件中，从vue实例中抽离-->
+    <div>
+        <my-component></my-component>
+
+    </div>
+
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/tween.js@16.3.4"></script>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    Vue.component('my-component',{
+
+        data:function(){
+            return {
+                total:0
+            }
+        },
+        watch:{
+            total:function (newValue, oldValue) {
+                var vm = this
+                function animate () {
+                    if (TWEEN.update()) {
+                        requestAnimationFrame(animate)
+                    }
+                }
+
+                new TWEEN.Tween({ tweeningNumber: oldValue })
+                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .to({ tweeningNumber: newValue }, 500)
+                    .onUpdate(function () {
+                        vm.total = this.tweeningNumber.toFixed(0)
+                    })
+                    .start()
+
+                animate()
+            }
+        },
+        template:`
+            <div>
+                <input v-model="total" type="number" step="20">
+                <p>{{ total }}</p>
+            </div>`
+
+
+
+    });
+    new Vue({
+        el:'#app',
+        data:{
+            number:0,
+            animatedNumber:0,
+        },
+        //vue内部监听属性
+        watch:{
+            number:function (newValue, oldValue) {
+                var vm = this
+                function animate () {
+                    if (TWEEN.update()) {
+                        requestAnimationFrame(animate)
+                    }
+                }
+
+                new TWEEN.Tween({ tweeningNumber: oldValue })
+                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .to({ tweeningNumber: newValue }, 500)
+                    .onUpdate(function () {
+                        vm.animatedNumber = this.tweeningNumber.toFixed(0)
+                    })
+                    .start()
+
+                animate()
+            }
+        }
+    });
+</script>
+</html>

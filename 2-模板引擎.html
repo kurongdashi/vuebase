@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <!--
+        1、插入文本到标签内{{ }}，双大括号模板引擎
+        2、插入html代码 v-html
+        3、缩写
+        v-bind 和v-on 较常用，vue提供缩写
+        v-bind 直接省略
+        v-on 缩写为 @
+
+    -->
+    <div>
+        <h3>模板引擎的使用</h3>
+        <p v-once>只绑定一次，单向的{{content1}}</p>
+        <p>只使用双大括号的结果：{{rawhtml}}</p>
+        <p >使用v-html的结果：<span v-html="rawhtml"></span></p>
+        <!--模板引擎内可以写 表达式，js代码等，注意赋值是语句不是表达式，定义和返回函数也不行-->
+        <p>输出 5+3={{ 5+3}}</p>
+        <p>输出 {{ new Date().getTime()}}</p>
+    </div>
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            content1:'this is text',
+            rawhtml:'<span style="color:#f00e0d;">this raw html</span>',
+        }
+    })
+</script>
+</html>

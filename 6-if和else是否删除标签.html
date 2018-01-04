@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>是否删除标签</title>
+</head>
+<body>
+<div id="app">
+    <h3>{{title}}</h3>
+    <!--
+        （1）单独的v-if
+        （2）v-if 联合v-else
+        （3）v-if 、v-else-if 、v-else组合使用
+        (4)如果 if else if中使用相同的表单元素，则在切换表单显示时，不会清除表单中输入的内容，如果需要清除已经填写的内容
+        则需要增加key属性 key='xxx'
+
+        （5）v-show 和v-if
+          v-show 基于css的display属性，一开始有很大的渲染开销,页面频繁变化时使用
+          v-if 一开始渲染开销小，但是如果页面频繁变化则开销大，建议使用v-show
+    -->
+    <div>
+        <p v-if="type==1">西瓜</p>
+        <p v-else-if="type==2">芒果</p>
+        <p v-else="type==3">香蕉</p>
+    </div>
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title:'是否删除标签',
+            type:1
+        },
+    });
+</script>
+</html>

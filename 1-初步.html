@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+</head>
+<style>
+    div{
+        padding:10px;
+        border-bottom:1px dashed #333333;
+    }
+</style>
+<body >
+<div id="app">
+    <!--通过id选择器绑定一个app，而且不能绑定在html,body标签上-->
+   <div>
+       <!--双大括号只会解析为文本，如果想输出HTML需要v-html 指令-->
+       <h3>{{vue1.title}}</h3>
+       <p v-once>只绑定一次，单向的{{vue1.cont}}</p>
+       <p>只使用双大括号的结果：{{vue1.rawhtml}}</p>
+       <p >使用v-html的结果：<span v-html="vue1.rawhtml"></span></p>
+
+   </div>
+    <div>
+        <h3>标签显示，删除</h3>
+        <p v-if="vue2.show"></p>
+    </div>
+    <div>
+        <h3>for in 循环</h3>
+        <p v-for="item in vue3">{{item.text}}</p>
+    </div>
+    <div>
+        <h3>处理用户输入事件on</h3>
+        <p ><button v-on:click="tan()">点击弹窗</button></p>
+    </div>
+
+    <div>
+        <h3>自定义组件和模板</h3>
+        <ol>
+            <!--这个自定义组件，这里遍历后台数据，可以重复组件-->
+            <todo-item v-for="obj in vue4" v-bind:todo="obj" v-bind:key="obj.id"></todo-item>
+        </ol>
+    </div>
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    //组件的定义必须在app定义前
+    Vue.component('todo-item',{
+        props:['todo'],//定义属性，数组里可以设置多个自定义属性(这里这个属性是一个对象)
+        template:"<li>{{todo.text}}</li>"
+    });
+    //-------------vue对象------------------
+    var app=new Vue({
+        el:'#app',
+        //所有的数据都是在data里
+        data:{
+            vue1:{title:'vue指令1-模板引擎，于双向数据绑定',cont:'这是v-model绑定的内容',rawhtml:'<span style="color:#f00e0d;">this raw html</span>'},
+            vue2:{show:true},
+            vue3: [
+                { text: '学习 JavaScript' },
+                { text: '学习 Vue' },
+                { text: '整个牛项目' }
+            ],
+            vue4:[
+                {id:0,text:'水果0'},
+                {id:1,text:'水果1'},
+                {id:2,text:'水果2'},
+                {id:3,text:'水果3'},
+            ],
+
+        },
+        //所有的用户要实现的事件都是在methods里,例如点击，触摸等等
+        methods:{
+            tan:function(){
+                alert('事件处理成功！');
+            }
+        },
+        //钩子事件，也就是声明周期的回调方法，当vue被创建时，会回调某些生命周期方法
+        created:function () {
+            console.log('vue被创建了');
+            //this指向当前vue对象
+            console.log(this);
+        },
+        mounted:function () {
+            
+        }
+    });
+    //--------------vue对象结束-----------------
+    app.$watch('vue2.show',function (old,newdata) {
+
+    });
+
+</script>
+</html>

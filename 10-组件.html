@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件</title>
+</head>
+<body>
+<div id="app">
+    <h3>{{title}}</h3>
+    <!--
+        1、组件的意义，
+        （1）可以封装重用代码
+        （2）自定义代码段
+        2、
+        (1)全局注册 ,必须在创建vue对象前
+        （2）和vue内部的 局部注册
+        3、组件解析，会受到原生html标签的限制，例如 table 下必须是tr select 下必须是option等，
+
+        4、初始值：组件中定义初始值 ，官方规定必须是一个函数，因为如果是多个组件使用一同一个对象时会出现问题，所以官方避免了
+                必须是一个返回数值对象的函数
+
+        5、属性：组件传递参数,即是给组件定义属性，通过属性传递的都是字符串，
+
+        6、组件的事件（类似android 自定义控件，都需要定义一下回调接口给外部使用）
+          $on():给组件绑定监听事件
+          $emit('事件名'):把组件事件暴露个父级的回调事件 $emit('事件名')，触发事件
+
+
+
+
+    -->
+    <div>
+        <!--全局注册-->
+        <my-first ></my-first>
+        <!--局部注册-->
+        <home1></home1>
+    </div>
+    <div>
+        <!--
+            1、组件的属性在html中是全小写+下划线
+            2、组件中传递的是字符串，如果想传递数值，应使用v-bind
+        -->
+        <component1 my-message="hello world" ></component1>
+
+    </div>
+    <div>
+        <p>{{total}}</p>
+        <!--
+            2、组件上的v-on 表示监听子组件暴露给父级的事件
+        -->
+        <component2 v-on:baolu="gettotal"></component2>
+    </div>
+    <!--
+        3、组件监听原生事件，.native修饰符，表示调用原生事件
+    -->
+    <div>
+        <component1 my-message="调用原生事件" v-on:click.native="show"></component1>
+    </div>
+    <!-- 4、组件绑定一个对象数据，直接使用v-bind 不带任何属性
+                组件的使用层是属于父级的，组件的模板层才是子级的,所以想咋使用层
+                设置组件属性，必须使用父级data
+        -->
+    <div>
+        <component1 v-bind="person" my-message="绑定对象" v-show="showzi"></component1>
+    </div>
+    <!--5、组件中嵌入html,如果子组件模板中没有slot(插槽)标签，则父级嵌入的内容将被丢弃，如果有则替换slot标签块-->
+    <div>
+        <!--没有嵌入html-->
+        <component3 my-message="组件内嵌入html"></component3>
+        <!--嵌入html-->
+        <component3 my-message="组件内嵌入html">
+            <p>内容标题</p>
+            <p>内容文本</p>
+        </component3>
+    </div>
+
+    <!--6、多个插槽标签slot,通过其name属性来区分，父级插入HTML代码时，也是通过name属性来具体分发到位置-->
+    <div>
+        <component4></component4>
+        <!--当有多个插槽时（具名插槽），父级嵌入的html标签必须增加一个slot属性对应，子组件slot标签的name属性 ,没有对应的将被分发到默认插槽-->
+        <component4>
+            <h1 slot="header">我是标题</h1>
+            <p>我是正文1</p>
+            <p>我是正文2</p>
+            <p slot="footer">我是脚注</p>
+        </component4>
+    </div>
+    <!--7、子组件向父级传递数据，子组件同过slot标签设置数据，父级通过slot-scop 属性接收-->
+    <div>
+        <component5>
+        </component5>
+    </div>
+
+    <!--8、多个组件共用一个挂载点,挂载点是保留标签component 设置is属性
+        在浏览器的console控制台，通过 vue创建的实例app.currview ='home1'动态赋值
+    -->
+    <component v-bind:is="currview"></component>
+    <!--9、直接给子组件设置id引用-->
+    <div>
+        <component1 ref="id1" my-message="id引用"></component1>
+    </div>
+    <!--10、组件命名规范，全小写+下划线方式，使用时也一样-->
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    //全局注册
+    Vue.component('my-first',{
+        template:"<div>my first component and 全局注册</div>"
+    });
+    Vue.component('component1',{
+    //给组件定义了属性，通过属性可以传递值在模板中使用，在js中是驼峰写法
+    //注意：如果你使用字符串模板，则没有这些限制。
+        props:['myMessage'],
+        template:"<button>{{myMessage}}</button>",
+
+    });
+    Vue.component('component2',{
+    //        局部注册组件，当组件内部有事件时，必须要把事件暴露给父级
+        template:"<button v-on:click='addc'>{{count}}</button>",
+        //组件中data必须是是一个函数，因为多个组件使用时，在不同的作用域里获取数据而不是同一个作用域下
+        //  组件内部的data是给template使用的
+        data:function () {
+            return {count:0}
+        },
+        //给组件定义事件，和暴露事件给父级
+        methods:{
+        // 给组件定义事件
+          addc:function () {
+              this.count++;
+              //当执行此addc方法是就会触发baolu这个事件,子组件暴露事件方法$emit()
+              this.$emit('baolu');
+          }
+        }
+    });
+    Vue.component('component3',{
+        props:['myMessage'],
+        template:`<div style="background: #ff99cc">{{myMessage}}
+            <slot>
+            <p>我是备份内容，如果父级没有嵌入，则显示我</p>
+            </slot>
+        </div>`,
+
+    });
+    Vue.component('component4',{
+        props:['myMessage'],
+        template:`<div style="background: #ff99cc">{{myMessage}}
+            <slot name="header">
+                <p>我是header备份内容，如果父级没有嵌入，则显示我</p>
+            </slot>
+            <slot></slot>
+            <slot name="footer">
+                <p>我是footer备份内容，如果父级没有嵌入，则显示我</p>
+            </slot>
+        </div>`,
+
+    });
+
+    Vue.component('component5',{
+        props:['myMessage'],
+        template:`<div>
+            <slot text="come child"></slot>
+        </div>`,
+
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title:'组件',
+            name:'',
+            total:0,
+            person:{
+                name:'张三丰',
+                age:130,
+                job:'zhangmen'
+            },
+            showzi:true,
+            currview:'home1'
+        },
+
+        methods:{
+//            这个方法监听子组件想父级暴露的事件，如果
+            gettotal:function () {
+               this.total++;
+            },
+            show:function () {
+                alert('原生事件');
+            }
+        },
+        //Vue内部，局部注册,注意是components 多了s
+        components:{
+            home1:{
+                template:"<div>my second component and 局部注册 header</div>"
+            },
+            home2:{
+                template:"<div>my second component and 局部注册 content</div>"
+            },
+            home3:{
+                template:"<div>my second component and 局部注册 footer</div>"
+            },
+
+        }
+    });
+//    引用组件，通过app.$refs.ID
+    console.log(app.$refs.id1);
+
+
+</script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>for</title>
+</head>
+<body>
+<div id="app">
+    <h3>{{title}}</h3>
+    <!--
+        v-for指令
+        (1)使用key,官方建议尽可能在使用 v-for 时提供 key
+        (2)使用index,表示遍历的item，从0开始
+        (3)v-for和v-if 处于同一标签上时，v-for优先级高于v-if ,他会循环所有，然后根据if条件显示
+        （4）默认集成了repeat
+
+    -->
+        <!-- item -->
+        <p v-for="item in obj">{{item.text}}</p>
+        <!--(key,value)-->
+       <p v-for="(item,key) in obj">{{key}}{{item.text}}</p>
+       <!--(item,key,index) index :表示第几次遍历-->
+       <p v-for="(item,key,index) in obj" v-if="key==1">{{key}}-{{item.text}}</p>
+        <!-- for写具体数字-->
+        <span v-for="n in 10">{{n}}</span>
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title:'是否删除标签',
+            obj:[
+                {id:0,text:'西瓜'},
+                {id:1,text:'芒果'},
+                {id:2,text:'香蕉'},
+                {id:3,text:'梨子'},
+            ],
+            obj2:{
+                name:'lingling',
+                age:30,
+                job:'IT'
+            }
+        },
+    });
+</script>
+</html>

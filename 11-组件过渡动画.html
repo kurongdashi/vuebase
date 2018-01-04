@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动画</title>
+    <link rel="stylesheet" href="animate.css">
+    <!--引用css动画库-->
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+</head>
+<style>
+    /* 可以设置不同的进入和离开动画 */
+    /* 设置持续时间和动画函数 */
+    .slide-fade-enter-active {
+        transition: all .3s ease;
+    }
+    .slide-fade-leave-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to
+        /* .slide-fade-leave-active for below version 2.1.8 */ {
+        transform: translateX(10px);
+        opacity: 0;
+    }
+    .bounce-enter-active{
+        animation:bounce .5s;
+    }
+    .bounce-leave-active{
+        animation:bounce .5s;
+    }
+    @keyframes bounce {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.5);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    .list-item {
+        /*flip动画元素不能设置inline*/
+        display: inline-block;
+        margin-right: 10px;
+    }
+    /*正则进场，和离场*/
+    .list-enter-active, .list-leave-active {
+        transition: all 1s;
+    }
+    /*必须设置离场状态为absolute，否则delete时，队列不会动画*/
+    .list-leave-active{
+        position: absolute;
+    }
+        /* 刚进场，完成离场*/
+    .list-enter, .list-leave-to{
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    /*transition-group的move属性*/
+    .list-move{
+        transition:all 1s;
+    }
+</style>
+<body>
+<div id="app">
+    <h3>{{title}}</h3>
+    <!--1、单组件过渡-->
+    <div>
+        <p><button v-on:click="show=!show">toggle</button></p>
+        <!--
+            （1）vue 提供的组件transtion 用来封装过渡，将其分为6个过程，使用name属性来设置类名前缀，默认是v-xxx
+            （2）6个过程enter（开始进场） leave（开始离场） -active（正在执行）-to(完成)
+        -->
+        <transition name="slide-fade" >
+            <p v-if="show">单组件过渡</p>
+        </transition>
+    </div>
+    <!--2、使用动画-->
+    <div>
+        <p><button v-on:click="show1=!show1">toggle</button></p>
+        <!--设置前缀名-->
+        <transition name="bounce" >
+            <p v-if="show1">使用动画</p>
+        </transition>
+    </div>
+    <!--3、结合第CSS三方动画库来实现,使用class 则6个过渡过程 使用xx-class -->
+    <div>
+        <p><button v-on:click="show2=!show2">toggle</button></p>
+        <!--使用第三方动画库时，可以不用设置前缀名-->
+        <transition
+            enter-active-class="animated bounceInRight"
+            leave-active-class="animated bounceInLeft">
+            <p v-if="show2">结合第三方动画库来实现,使用class 则6个过渡过程 使用xx-class</p>
+        </transition>
+    </div>
+    <!--4、使用js钩子，同时结合js动画库velocity.js，显示定义transition 标签上的动画时间,和 -->
+    <div>
+        <p><button v-on:click="show3=!show3">toggle</button></p>
+        <transition
+            v-on:enter="enter"
+            v-on:leave="leave">
+            <p v-if="show3">使用js钩子，同时结果js动画库velocity.js</p>
+        </transition>
+    </div>
+    <!--5、过渡模式多个组件切换（使用key标记），out-in 和in-out ,当有标签切换时，一个标签先过渡另一个后过渡-->
+    <div>
+        <p><button v-on:click="show4=!show4">toggle</button></p>
+        <!--使用第三方动画库时，可以不用设置前缀名-->
+        <transition
+                mode="in-out"
+                enter-active-class="animated bounceInRight"
+                leave-active-class="animated bounceInLeft">
+            <!--注意；当有相同的标签切换时，必须要给标签增加一个key标记，否则vue只更换标签内容而不切换标签-->
+            <p v-if="show4" key="key1">过渡模式1，out-in 和in-out </p>
+
+            <p v-if="!show4" key="key2">过渡模式2，out-in 和in-out </p>
+        </transition>
+    </div>
+    <!--6、多个组件过渡，只需要使用component保留标签切换，外界transition标签封装就行了，不需要key-->
+    <div>
+        <p><button v-on:click="currview='home2'">toggle</button></p>
+        <transition>
+            <component v-bind:is="currview"></component>
+        </transition>
+    </div>
+
+    <!--7、列表过渡，当增删列表项的item时，整个列表和item都进行过渡 ，
+        (1)使用transition-group ，他默认是一个span标签，可以设置tag来改变标签
+         上面有一个问题，当items增加和减少元素时，只有单个元素过渡了，整个列表没有过渡，显得不平滑
+
+        (2)解决方案：transition-group 有一个v-move属性，和类名前缀一样可以设置，其内部实现了flip动画
+    -->
+    <div>
+        <p>
+            <button v-on:click="shuffle">shuffle</button>
+            <button v-on:click="add">add</button>
+            <button v-on:click="remove">delete</button>
+        </p>
+        <transition-group name="list"  tag="p">
+            <span v-for="item in items" class="list-item" v-bind:key="item">{{item}}</span>
+        </transition-group>
+
+    </div>
+
+</div>
+
+</body>
+<!--引用js动画库 velocity:速度-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
+<script src="https://unpkg.com/vue"></script>
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title:'动画',
+            show:true,
+            show1:true,
+            show2:true,
+            show3:true,
+            show4:true,
+            currview:'home1',
+            items: [1,2,3,4,5,6,7,8,9],
+            nextNum: 10
+        },
+        methods:{
+            //
+            enter:function (el,done) {
+//                velocity（参数1，参数2，参数3），参1是当前过渡的标签，参数2：是对象包涵要过渡的属性，参数3：对象包涵过渡时间duration
+                Velocity(el,{ opacity: 1, fontSize: '1.4em' }, { duration: 300 })
+                Velocity(el,{ fontSize: '1em' }, { complete: done })
+            },
+            leave: function (el, done) {
+                Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
+                Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
+                Velocity(el, {
+                    rotateZ: '45deg',
+                    translateY: '30px',
+                    translateX: '30px',
+                    opacity: 0
+                }, { complete: done })
+            },
+            //定义一个产生随机数的方法
+            randomIndex:function () {
+                return Math.floor(Math.random()*this.items.length);
+            },
+            add:function () {
+              this.items.splice(this.randomIndex(),0,this.nextNum++)
+            },
+            remove:function () {
+                this.items.splice(this.randomIndex(),1)
+            },
+            shuffle: function () {
+                this.items = _.shuffle(this.items)
+            }
+        },
+        components:{
+            home1:{template:`<div>组件1号</div>`},
+            home2:{template:`<div>组件2号</div>`},
+        }
+    });
+
+
+
+</script>
+</html>

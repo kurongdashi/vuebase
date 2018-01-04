@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表单处理</title>
+</head>
+<body>
+<div id="app">
+    <h3>{{title}}</h3>
+    <!--
+        注意：v-bind 是绑定属性 、v-model 绑定input的值
+    -->
+    <div>
+        <!--1、input text绑定值使用v-model,会忽略设置的初始值，只会响应填入值-->
+        <p><input type="text" v-model="inpt"></p>
+        <p>{{inpt}}</p>
+
+        <!--2、textarea 必须使用v-model 直接在html标签中使用模板引擎不生效 -->
+        <p><textarea name="" id="" cols="30" rows="10" v-model="text"></textarea></p>
+        <!--3、多选框 不写value绑定的是boolean值-->
+        <p>
+            <input type="checkbox" value="zhangsan" v-model="names">张三
+            <input type="checkbox" value="lisi" v-model="names">李四
+            <input type="checkbox" value="wangwu" v-model="names">王五
+        </p>
+        <p>{{names}}</p>
+        <!--4、单选框-->
+        <p>
+            <input type="radio" value="nan" v-model="sex">男
+            <input type="radio" value="nv" v-model="sex">nv
+        </p>
+        <p>{{sex}}</p>
+
+        <!--5、下拉列表-->
+        <div>
+            <select name="color" v-model="colors" >
+                <option value="">-请选择-</option>
+                <option value="blue">蓝色</option>
+                <option value="red">红色</option>
+                <option value="gold">金色</option>
+            </select>
+            <p>{{colors}}</p>
+        </div>
+        <!--6、v-model 修饰符 .number .trim .lazy-->
+
+    </div>
+
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title: '表单处理',
+            inpt:'',
+            text: '',
+            names:[],
+            sex:'',
+            colors:''
+
+        },
+        methods: {}
+    });
+</script>
+</html>

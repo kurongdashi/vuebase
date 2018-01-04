@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绑定样式</title>
+</head>
+<style>
+    .textc1{
+        color: #e21;
+    }
+    .textc2{
+        color: #333333;
+    }
+    .bg1{
+        background-color: #e4b9b9;
+    }
+    .bg2{
+        background-color: #ec971f;
+    }
+</style>
+<body>
+<div id="app">
+    <h3>{{title}}</h3>
+    <!--
+    1、v-bind:class 缩写为 :属性
+
+    （1）对象写法，单个属性的绑定 指令v-bind:class='{这里是一个表达式，根据结果判断显示}'
+    （2）使用计算属性返回所需的表达式
+    （3）数组写法：直接使用data里的属性，多个属性可以写成数组，在数组中还可以写表达式
+    -->
+    <!--（1）对象写法,该对象时data里的值 {} 对象里面是根据data里flag判断是否使用该值-->
+
+    <p v-bind:class="{textc1:flag1, bg1:flag2}">这是绑定样式</p>
+        <!--也可以是一个方法-->
+    <p v-bind:class="active">这是绑定样式</p>
+        <!--（2）同时绑定多个层叠样式，直接写一个数组,数组写法就直接使用class ,没有判断-->
+    <p v-bind:class="[class1,class2]">这是绑定样式</p>
+    <!--（3）混合写法对象+数组-->
+    <p v-bind:class="[{bg1:flag1},class1]">这是绑定样式</p>
+
+    <hr>
+    <!--
+    2、v-bind:style={object} 绑定内联样式，类似style写法
+    -->
+    <p v-bind:style="{color:style1,transform:style2}">这是绑定样式</p>
+
+
+
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title:'绑定样式',
+            flag1:true,
+            flag2:true,
+            class1:'textc1',
+            class2:'bg1',
+            style1:'gold',
+            style2:'scale(1)'
+
+
+        },
+        //计算属性
+        computed:{
+            active:function () {
+                    return {
+                        active1:this.flag1,
+                        active2:this.flag2
+                    }
+
+            }
+        },
+    });
+</script>
+</html>
